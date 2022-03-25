@@ -4,14 +4,12 @@ import { Routes, Route, useNavigate } from 'react-router-dom';
 import LoginComponent from './pages/LoginComponent';
 import RegisterComponent from './pages/RegisterComponent';
 import HomeComponent from './pages/HomeComponent';
-import NavbarComponent from './components/NavbarComponent';
 
 function App() {
   const navigate = useNavigate();
 
   useEffect(() => {
     let authToken = sessionStorage.getItem('Auth Token');
-
     if (authToken) {
       navigate('/home');
     }

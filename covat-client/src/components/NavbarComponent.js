@@ -20,7 +20,7 @@ import { MoonIcon, SunIcon } from '@chakra-ui/icons';
 import { useNavigate, Link } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 
-export default function Nav() {
+export default function NavbarComponent(caller) {
   const { colorMode, toggleColorMode } = useColorMode();
   //   const { isOpen, onOpen, onClose } = useDisclosure();
   const [auth, setAuth] = useState(false);
@@ -34,7 +34,6 @@ export default function Nav() {
 
   useEffect(() => {
     let authToken = sessionStorage.getItem('Auth Token');
-    console.log('Render');
     if (authToken) {
       setAuth(true);
       setEmail(sessionStorage.getItem('email'));
@@ -60,39 +59,43 @@ export default function Nav() {
               </Button>
 
               {email && (
-                <Menu>
-                  <MenuButton
-                    as={Button}
-                    rounded={'full'}
-                    variant={'link'}
-                    cursor={'pointer'}
-                    minW={0}
-                  >
-                    <Avatar
-                      size={'sm'}
-                      src={'https://img.icons8.com/office/344/test-account.png'}
-                    />
-                  </MenuButton>
-                  <MenuList alignItems={'center'}>
-                    <br />
-                    <Center>
+                <>
+                  <Menu>
+                    <MenuButton
+                      as={Button}
+                      rounded={'full'}
+                      variant={'link'}
+                      cursor={'pointer'}
+                      minW={0}
+                    >
                       <Avatar
-                        size={'2xl'}
+                        size={'sm'}
                         src={
                           'https://img.icons8.com/office/344/test-account.png'
                         }
                       />
-                    </Center>
-                    <br />
-                    <Center>
-                      <p>{email ? email : undefined}</p>
-                    </Center>
-                    <br />
-                    <MenuDivider />
-                    <MenuItem>Account Settings</MenuItem>
-                    <MenuItem onClick={handleLogout}>Logout</MenuItem>
-                  </MenuList>
-                </Menu>
+                    </MenuButton>
+                    <MenuList alignItems={'center'}>
+                      <br />
+                      <Center>
+                        <Avatar
+                          size={'2xl'}
+                          src={
+                            'https://img.icons8.com/office/344/test-account.png'
+                          }
+                        />
+                      </Center>
+                      <br />
+                      <Center>
+                        <p>{email ? email : undefined}</p>
+                      </Center>
+                      <br />
+                      <MenuDivider />
+                      <MenuItem>Account Settings</MenuItem>
+                      <MenuItem onClick={handleLogout}>Logout</MenuItem>
+                    </MenuList>
+                  </Menu>
+                </>
               )}
             </Stack>
           </Flex>
