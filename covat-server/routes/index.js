@@ -19,7 +19,7 @@ router.post("/insert", (req, res) => {
   console.log(req.body);
   const recordToPush = req.body;
   recordToPush.datetime = new Date().toLocaleString();
-  db.ref("records").set(recordToPush);
+  db.ref("records").push(recordToPush);
   res.status(200).send("Attendance record added.");
 });
 
