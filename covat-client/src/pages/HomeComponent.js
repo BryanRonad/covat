@@ -11,7 +11,15 @@ import {
   TableCaption,
   Box,
 } from '@chakra-ui/react';
-import { onValue, push, ref, set } from 'firebase/database';
+import {
+  onChildAdded,
+  onChildChanged,
+  onChildRemoved,
+  onValue,
+  push,
+  ref,
+  set,
+} from 'firebase/database';
 import NavbarComponent from '../components/NavbarComponent';
 import { app, db } from '../config/firebaseConfig';
 
@@ -24,23 +32,29 @@ function HomeComponent() {
     let authToken = sessionStorage.getItem('Auth Token');
     if (authToken) {
       setAuth(true);
-      // writeUserData();
       const recordReadRef = ref(db, 'records');
-      onValue(recordReadRef, snapshot => {
+      let list = [];
+      onChildAdded(recordReadRef, snapshot => {
         const data = snapshot.val();
-        if (Object.keys(data).length > 0) {
-          console.log(Object.keys(data));
-          let arrayOfObj = Object.entries(data).map(e => ({ [e[0]]: e[1] }));
-          setTableData(arrayOfObj);
-        } else {
-          setTableData([]);
-        }
+        list.push(data);
+        setTableData(tableData.concat(list));
       });
     } else {
       navigate('/');
       setAuth(false);
     }
   }, []);
+
+  const randomFunction = () => {
+    const recordReadRef = ref(db, 'records');
+    let list = [];
+    onChildAdded(recordReadRef, snapshot => {
+      const data = snapshot.val();
+      list.push(data);
+      setTableData(tableData.concat(data));
+    });
+  };
+
   return (
     <>
       {auth != null && (
@@ -61,15 +75,14 @@ function HomeComponent() {
               </Thead>
               {tableData.length > 0 && (
                 <Tbody>
-                  {console.log(tableData)}
                   {tableData.map((ele, index) => (
                     <Tr key={index}>
-                      <Td>{ele[Object.keys(ele)].name}</Td>
-                      <Td>{ele[Object.keys(ele)].rno}</Td>
-                      <Td>{ele[Object.keys(ele)].datetime}</Td>
-                      <Td>{ele[Object.keys(ele)].department}</Td>
-                      <Td>{ele[Object.keys(ele)].semester}</Td>
-                      <Td>{ele[Object.keys(ele)].temperature}</Td>
+                      <Td>{ele.name}</Td>
+                      <Td>{ele.rno}</Td>
+                      <Td>{ele.datetime}</Td>
+                      <Td>{ele.department}</Td>
+                      <Td>{ele.semester}</Td>
+                      <Td>{ele.temperature}</Td>
                     </Tr>
                   ))}
                 </Tbody>
