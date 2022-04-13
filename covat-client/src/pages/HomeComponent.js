@@ -10,6 +10,7 @@ import {
   Td,
   TableCaption,
   Box,
+  useToast,
 } from '@chakra-ui/react';
 import {
   onChildAdded,
@@ -27,6 +28,7 @@ function HomeComponent() {
   const navigate = useNavigate();
   const [auth, setAuth] = useState(null);
   const [tableData, setTableData] = useState([]);
+  const toast = useToast();
 
   useEffect(() => {
     let authToken = sessionStorage.getItem('Auth Token');
@@ -37,6 +39,16 @@ function HomeComponent() {
       onChildAdded(recordReadRef, snapshot => {
         const data = snapshot.val();
         list.push(data);
+        if (data.temperature > 100.4) {
+          toast({
+            title: 'High body temperature detected',
+            description: `Student ${data.rno} logged with high temperature (${data.temperature})`,
+            status: 'error',
+            duration: 4000,
+            isClosable: true,
+            position: 'top-right',
+          });
+        }
         setTableData(tableData.concat(list));
       });
     } else {
