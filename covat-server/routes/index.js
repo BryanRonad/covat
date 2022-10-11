@@ -23,4 +23,23 @@ router.post("/insert", (req, res) => {
   res.status(200).send("Attendance record added.");
 });
 
+router.post("/status", (req, res) => {
+  const { rno } = req.body;
+  const ref = db.ref();
+  const query = ref.orderByChild("rno").equalTo(rno);
+  query.once("value", (snapshot) => {
+    snapshot.forEach((userSnapshot) => {
+      let value = !userSnapshot.val().status;
+      console.log(value);
+      db.ref(`/${userSnapshot.key}/`).update({ status: value });
+    });
+  });
+  // var query = db.ref("/").orderByChild("rno").equalTo(rno);
+  // query.on("value", function (snapshot) {
+  //   snapshot.ref.update({ status: true });
+  //   console.log(snapshot);
+  // });
+  res.status(200).send(`Status flipped for user ${rno}`);
+});
+
 module.exports = router;

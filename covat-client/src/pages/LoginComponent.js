@@ -90,9 +90,6 @@ export default function LoginComponent() {
           <Stack spacing={8} mx={'auto'} maxW={'lg'} py={12} px={6}>
             <Stack align={'center'}>
               <Heading fontSize={'4xl'}>Sign in to your account</Heading>
-              <Text fontSize={'lg'} color={'gray.600'}>
-                to enjoy our cool <CLink color={'blue.400'}>features</CLink> ✌️
-              </Text>
             </Stack>
             <Box rounded={'lg'} bg={globalColor2} boxShadow={'lg'} p={8}>
               <Stack spacing={4}>
