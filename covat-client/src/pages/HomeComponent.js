@@ -110,7 +110,7 @@ function HomeComponent() {
       {auth != null &&
         (tableData.length > 0 ? (
           <div>
-            <NavbarComponent resetButton={true} />
+            <NavbarComponent resetButton={true} tableData={tableData} />
             <Box p="10">
               <Table variant="simple">
                 {/* <TableCaption>Student attendance /</TableCaption> */}
@@ -142,7 +142,7 @@ function HomeComponent() {
                           <Icon as={NotAllowedIcon}></Icon>
                         )}
                       </Td>
-                      <Td>{ele.datetime}</Td>
+                      <Td>{ele.datetime && new Date(ele.datetime).toLocaleTimeString()}</Td>
                       <Td color={'white'}>
                         <Button
                           onClick={e => {

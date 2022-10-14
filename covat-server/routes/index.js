@@ -29,9 +29,8 @@ router.post("/status", (req, res) => {
   const query = ref.orderByChild("rno").equalTo(rno);
   query.once("value", (snapshot) => {
     snapshot.forEach((userSnapshot) => {
-      let value = !userSnapshot.val().status;
-      console.log(value);
-      db.ref(`/${userSnapshot.key}/`).update({ status: value });
+      // let value = !userSnapshot.val().status;
+      db.ref(`/${userSnapshot.key}/`).update({ status: true, datetime: Date.now() });
     });
   });
   // var query = db.ref("/").orderByChild("rno").equalTo(rno);

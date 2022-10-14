@@ -20,9 +20,10 @@ import { MoonIcon, SunIcon } from '@chakra-ui/icons';
 import { useNavigate, Link } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { db } from '../config/firebaseConfig';
-import { child, get, onValue, ref, update } from 'firebase/database';
+import { onValue, ref, update } from 'firebase/database';
+import * as XLSX from "xlsx";
 
-export default function NavbarComponent({resetButton}) {
+export default function NavbarComponent({resetButton, tableData}) {
   const { colorMode, toggleColorMode } = useColorMode();
   //   const { isOpen, onOpen, onClose } = useDisclosure();
   const [auth, setAuth] = useState(false);
@@ -34,13 +35,21 @@ export default function NavbarComponent({resetButton}) {
     navigate('/');
   };
 
+  const downloadExcel = (data) => {
+    const worksheet = XLSX.utils.json_to_sheet(data);
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, "Sheet1");
+    //let buffer = XLSX.write(workbook, { bookType: "xlsx", type: "buffer" });
+    //XLSX.write(workbook, { bookType: "xlsx", type: "binary" });
+    XLSX.writeFile(workbook, `attendance_${(new Date()).toISOString().split('T')[0]}.xlsx`);
+  }
+
   const resetAttendance = () => {
     const recordReadRef = ref(db, '/');
     onValue(recordReadRef, snapshot => {
         const data = snapshot.val();
         Object.keys(data).forEach((key) => {
-          console.log(recordReadRef.toString()+key);
-          update(ref(db, `/${key}`), {status: false})
+          update(ref(db, `/${key}`), {status: false, datetime: null})
         })
       }, {onlyOnce: true});
   };
@@ -67,6 +76,7 @@ export default function NavbarComponent({resetButton}) {
 
           <Flex alignItems={'center'}>
             <Stack direction={'row'} spacing={7}>
+              {resetButton && <Button onClick={() => downloadExcel(tableData)}>Export to XLSX</Button>}
               {resetButton && <Button onClick={resetAttendance}>Reset Attendance</Button>}
               <Button onClick={toggleColorMode}>
                 {colorMode === 'light' ? <MoonIcon /> : <SunIcon />}
