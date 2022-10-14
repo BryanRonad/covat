@@ -40,7 +40,7 @@ import {
 import NavbarComponent from '../components/NavbarComponent';
 import { app, db } from '../config/firebaseConfig';
 import { Icon } from '@chakra-ui/react';
-import { CheckCircleIcon, CheckIcon, NotAllowedIcon } from '@chakra-ui/icons';
+import { CheckCircleIcon, NotAllowedIcon } from '@chakra-ui/icons';
 
 function HomeComponent() {
   const navigate = useNavigate();
@@ -110,7 +110,7 @@ function HomeComponent() {
       {auth != null &&
         (tableData.length > 0 ? (
           <div>
-            <NavbarComponent caller="home" />
+            <NavbarComponent resetButton={true} />
             <Box p="10">
               <Table variant="simple">
                 {/* <TableCaption>Student attendance /</TableCaption> */}

@@ -19,8 +19,10 @@ import {
 import { MoonIcon, SunIcon } from '@chakra-ui/icons';
 import { useNavigate, Link } from 'react-router-dom';
 import { useEffect, useState } from 'react';
+import { db } from '../config/firebaseConfig';
+import { child, get, onValue, ref, update } from 'firebase/database';
 
-export default function NavbarComponent(caller) {
+export default function NavbarComponent({resetButton}) {
   const { colorMode, toggleColorMode } = useColorMode();
   //   const { isOpen, onOpen, onClose } = useDisclosure();
   const [auth, setAuth] = useState(false);
@@ -30,6 +32,17 @@ export default function NavbarComponent(caller) {
   const handleLogout = () => {
     sessionStorage.removeItem('Auth Token');
     navigate('/');
+  };
+
+  const resetAttendance = () => {
+    const recordReadRef = ref(db, '/');
+    onValue(recordReadRef, snapshot => {
+        const data = snapshot.val();
+        Object.keys(data).forEach((key) => {
+          console.log(recordReadRef.toString()+key);
+          update(ref(db, `/${key}`), {status: false})
+        })
+      }, {onlyOnce: true});
   };
 
   useEffect(() => {
@@ -54,6 +67,7 @@ export default function NavbarComponent(caller) {
 
           <Flex alignItems={'center'}>
             <Stack direction={'row'} spacing={7}>
+              {resetButton && <Button onClick={resetAttendance}>Reset Attendance</Button>}
               <Button onClick={toggleColorMode}>
                 {colorMode === 'light' ? <MoonIcon /> : <SunIcon />}
               </Button>
@@ -91,7 +105,7 @@ export default function NavbarComponent(caller) {
                       </Center>
                       <br />
                       <MenuDivider />
-                      <MenuItem>Account Settings</MenuItem>
+                      {/* <MenuItem>Account Settings</MenuItem> */}
                       <MenuItem onClick={handleLogout}>Logout</MenuItem>
                     </MenuList>
                   </Menu>
