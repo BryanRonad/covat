@@ -24,13 +24,13 @@ router.post("/insert", (req, res) => {
 });
 
 router.post("/status", (req, res) => {
-  const { rno } = req.body;
+  const { rno, s3 } = req.body;
   const ref = db.ref();
   const query = ref.orderByChild("rno").equalTo(rno);
   query.once("value", (snapshot) => {
     snapshot.forEach((userSnapshot) => {
       // let value = !userSnapshot.val().status;
-      db.ref(`/${userSnapshot.key}/`).update({ status: true, datetime: Date.now() });
+      db.ref(`/${userSnapshot.key}/`).update({ status: true, datetime: Date.now(), s3: s3 });
     });
   });
   // var query = db.ref("/").orderByChild("rno").equalTo(rno);

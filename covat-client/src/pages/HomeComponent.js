@@ -182,7 +182,9 @@ function HomeComponent() {
                                   modalInfo.img
                                 )}`}
                               /> */}
-                              <Text>Image supposed to go here</Text>
+                              <Box textAlign="center">
+                                  <Image src={modalInfo.s3} alt='Dan Abramov' fallbackSrc='https://via.placeholder.com/150'/>
+                              </Box>
                             </Center>
                           </Box>
                         </VStack>
